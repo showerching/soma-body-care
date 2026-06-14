@@ -1,0 +1,7 @@
+# 只發布 web app 本體，其餘個人文件不公開
+01_問題分析/
+02_APP規劃/
+mockups/
+開發紀錄.md
+README.md
+.DS_Store

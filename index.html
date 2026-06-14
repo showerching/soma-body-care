@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Body Care" />
+    <title>Soma · 體態照顧</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=bright6" />
+  </head>
+  <body>
+    <div class="phone" role="application" aria-label="體態照顧 App">
+      <!-- 置頂 App bar -->
+      <header class="appbar">
+        <button class="appbar-back" id="backBtn" type="button" aria-label="返回" hidden>‹</button>
+        <div class="appbar-titles">
+          <p class="appbar-eyebrow" id="appbarEyebrow">SOMA</p>
+          <h1 class="appbar-title" id="appbarTitle">今天</h1>
+        </div>
+        <button class="appbar-action" id="resetBtn" type="button" aria-label="重置示範資料"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4.4h-4.4"/></svg></button>
+      </header>
+
+      <!-- 內容捲動區 -->
+      <main class="screen" id="screen">
+        <!-- 今日 -->
+        <section class="view is-active" id="view-home" aria-label="今天">
+          <button class="day-banner" id="dayBanner" type="button" hidden></button>
+
+          <section class="ring-hero" aria-label="今日建議加強部位">
+            <div id="breathRing" class="ring-stage"></div>
+            <p class="ring-focus" id="ringFocus"></p>
+            <p class="ring-suggest" id="ringSuggest"></p>
+          </section>
+
+          <h2 class="block-title compact">三個主題的近況</h2>
+          <div id="statusCards" class="status-cards"></div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>今天做了什麼</h3>
+              <span class="muted" id="homeDoneCount">0 個動作</span>
+            </div>
+            <div id="homeQuickLog" class="quick-log"></div>
+            <button class="ghost-btn full" id="goLibraryFromHome" type="button">＋ 從練習清單加入動作</button>
+          </div>
+        </section>
+
+        <!-- 主題脈絡（push view） -->
+        <section class="view" id="view-topic" aria-label="主題脈絡"></section>
+
+        <!-- 練習清單 -->
+        <section class="view" id="view-library" aria-label="練習清單">
+          <h2 class="block-title">練習清單</h2>
+          <p class="block-sub">同一套動作資料庫，依主題與類型篩選，也可以新增自己的動作。</p>
+
+          <div class="filter-row" id="topicFilter" aria-label="主題篩選"></div>
+          <div class="filter-row subtle" id="typeFilter" aria-label="類型篩選"></div>
+
+          <div class="list-meta"><span id="libraryCount"></span></div>
+          <div id="actionList" class="action-list"></div>
+
+          <button class="ghost-btn full" id="openCustomForm" type="button">＋ 新增自訂動作</button>
+          <form id="customForm" class="card custom-form" hidden>
+            <div class="card-head"><h3>新增自訂動作</h3><span class="muted">存在本機</span></div>
+            <label class="field"><span>動作名稱</span><input name="name" type="text" placeholder="例如：彈力帶肩外旋" required /></label>
+            <div class="field-row">
+              <label class="field"><span>主題</span><select name="topic"></select></label>
+              <label class="field"><span>類型</span><select name="type"></select></label>
+            </div>
+            <label class="field"><span>目的</span><textarea name="purpose" rows="2" placeholder="想改善什麼"></textarea></label>
+            <label class="field"><span>注意</span><textarea name="caution" rows="2" placeholder="例如：不要聳肩、不要拱腰"></textarea></label>
+            <div class="row-actions">
+              <button class="primary-btn" type="submit">新增</button>
+              <button class="ghost-btn" type="button" id="cancelCustom">取消</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 今日延伸紀錄（push view） -->
+        <section class="view" id="view-detail" aria-label="延伸紀錄">
+          <h2 class="block-title">整頁延伸紀錄</h2>
+          <p class="block-sub" id="detailDateSub"></p>
+          <div id="detailList"></div>
+          <div class="row-actions sticky-actions">
+            <button class="primary-btn" id="saveDetail" type="button">儲存全部</button>
+            <button class="ghost-btn" id="addMissing" type="button">新增漏記動作</button>
+          </div>
+        </section>
+
+        <!-- 紀錄（日曆） -->
+        <section class="view" id="view-records" aria-label="練習紀錄">
+          <h2 class="block-title">練習日曆</h2>
+          <p class="block-sub">看哪些天照顧了肩膀、骨盆與呼吸，不做連續打卡壓力。</p>
+          <div class="cal-head">
+            <button class="date-nav" id="monthPrev" type="button" aria-label="上個月">‹</button>
+            <h3 id="monthLabel"></h3>
+            <button class="date-nav" id="monthNext" type="button" aria-label="下個月">›</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div class="cal-legend">
+            <span><i class="dot dot-shoulder"></i>肩膀</span>
+            <span><i class="dot dot-pelvis"></i>骨盆</span>
+            <span><i class="dot dot-breath"></i>呼吸</span>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 id="dayRecordTitle">選一天看紀錄</h3></div>
+            <div id="dayRecord"></div>
+          </div>
+        </section>
+
+        <!-- 回顧 -->
+        <section class="view" id="view-review" aria-label="回顧">
+          <h2 class="block-title">回顧</h2>
+          <p class="block-sub">把「做了什麼」變成「目前狀態如何、下週調整什麼」。</p>
+          <div class="filter-row" id="periodFilter"></div>
+
+          <div class="card">
+            <div class="card-head"><h3>主題覆蓋</h3><span class="muted">天數 / 動作次數</span></div>
+            <div id="coverage" class="coverage"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>症狀趨勢</h3><span class="muted">有填才畫</span></div>
+            <div id="trends" class="trends"></div>
+          </div>
+
+          <div class="card advice">
+            <div class="card-head"><h3>下週建議</h3><span class="muted">觀察→原因→建議</span></div>
+            <div id="advice"></div>
+          </div>
+        </section>
+
+        <!-- 提醒 -->
+        <section class="view" id="view-reminders" aria-label="日常提醒">
+          <h2 class="block-title">日常提醒</h2>
+          <p class="block-sub">先做 App 內可勾選提醒，真正推播列為未來代辦。</p>
+          <div id="reminderList" class="reminder-list"></div>
+          <div class="card warn-card">
+            <div class="card-head"><h3 class="warn-title"><span class="sec-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5l8.5 15H3.5z"/><path d="M12 10v4.2"/><path d="M12 17.2v.01"/></svg></span>警訊提示</h3></div>
+            <p class="warn-text">本 App 非醫療診斷工具。若出現咳嗽／提重物時鼠蹊明顯痛、會變大的鼓包、放射痛或麻木、胸痛或持續頭暈，請停止訓練並尋求醫師或物理治療師評估。</p>
+          </div>
+        </section>
+      </main>
+
+      <!-- 底部 tab -->
+      <nav class="tabbar" aria-label="主要導覽">
+        <button class="tab is-active" data-tab="home" type="button"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="3.1"/></svg></span>今日</button>
+        <button class="tab" data-tab="library" type="button"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6.5h12M8 12h12M8 17.5h12"/><circle cx="4.2" cy="6.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.2" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="4.2" cy="17.5" r="1.2" fill="currentColor" stroke="none"/></svg></span>練習</button>
+        <button class="tab" data-tab="records" type="button"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="2.2"/><path d="M4 10h16"/><path d="M8.5 3.5v4M15.5 3.5v4"/></svg></span>紀錄</button>
+        <button class="tab" data-tab="review" type="button"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 5v14.5H19"/><path d="M8 15l3-3.5 2.5 2L19 7.5"/></svg></span>回顧</button>
+        <button class="tab" data-tab="reminders" type="button"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 4.5 2 5.8 2 5.8H4.5s2-1.3 2-5.8Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg></span>提醒</button>
+      </nav>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js?v=bright6"></script>
+  </body>
+</html>
